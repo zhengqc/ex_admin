@@ -89,7 +89,7 @@ defmodule ExAdmin.Table do
             {f_name, opts} ->
               build_field(resource, conn, {f_name, Enum.into(opts, %{})}, fn contents, f_name ->
                 td ".td-#{parameterize(f_name)}" do
-                  Phoenix.HTML.raw(contents)
+                  contents |> HtmlSanitizeEx.html5() |> Phoenix.HTML.raw()
                 end
               end)
           end
@@ -335,6 +335,7 @@ defmodule ExAdmin.Table do
       td to_class(".td-", field_name) do
         contents
         |> text()
+        |> HtmlSanitizeEx.html5()
         |> Phoenix.HTML.raw()
       end
     end
@@ -347,7 +348,9 @@ defmodule ExAdmin.Table do
   def handle_contents(contents, field_name) do
     markup do
       td to_class(".td-", field_name) do
-        Phoenix.HTML.raw(contents)
+        contents
+        |> HtmlSanitizeEx.html5()
+        |> Phoenix.HTML.raw()
       end
     end
   end
