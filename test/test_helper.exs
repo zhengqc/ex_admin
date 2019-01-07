@@ -24,6 +24,7 @@ TestExAdmin.Repo.__adapter__().storage_up(TestExAdmin.Repo.config())
 
 {:ok, _pid} = TestExAdmin.Repo.start_link()
 {:ok, _pid} = TestExAdmin.Endpoint.start_link()
+{:ok, _} = Application.ensure_all_started(:ecto_sql)
 _ = Ecto.Migrator.up(TestExAdmin.Repo, 0, TestExAdmin.Migrations, log: false)
 Process.flag(:trap_exit, true)
 Ecto.Adapters.SQL.Sandbox.mode(TestExAdmin.Repo, :manual)

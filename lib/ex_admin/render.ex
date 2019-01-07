@@ -22,30 +22,20 @@ defimpl ExAdmin.Render, for: Float do
   def to_string(data), do: Float.to_string(data)
 end
 
-defimpl ExAdmin.Render, for: Ecto.Time do
-  def to_string(dt) do
-    dt
-    |> Ecto.Time.to_string()
-    |> String.replace("Z", "")
-  end
+defimpl ExAdmin.Render, for: Date do
+  def to_string(data), do: Date.to_string(data)
 end
 
-defimpl ExAdmin.Render, for: Ecto.DateTime do
-  def to_string(dt) do
-    dt
-    |> Utils.to_datetime()
-    |> convert_to_local_time(Application.get_env(:ex_admin, :convert_local_time, true))
-    |> Utils.format_datetime()
-  end
-
-  defp convert_to_local_time(date, true), do: :calendar.universal_time_to_local_time(date)
-  defp convert_to_local_time(date, false), do: date
+defimpl ExAdmin.Render, for: Time do
+  def to_string(data), do: Time.to_string(data)
 end
 
-defimpl ExAdmin.Render, for: Ecto.Date do
-  def to_string(dt) do
-    Ecto.Date.to_string(dt)
-  end
+defimpl ExAdmin.Render, for: NaiveDateTime do
+  def to_string(data), do: NaiveDateTime.to_string(data)
+end
+
+defimpl ExAdmin.Render, for: DateTime do
+  def to_string(data), do: DateTime.to_string(data)
 end
 
 defimpl ExAdmin.Render, for: Decimal do
@@ -56,7 +46,7 @@ end
 
 defimpl ExAdmin.Render, for: Map do
   def to_string(map) do
-    Poison.encode!(map)
+    Jason.encode!(map)
   end
 end
 
@@ -68,10 +58,10 @@ defimpl ExAdmin.Render, for: List do
       if String.printable?(str) do
         str
       else
-        Poison.encode!(list)
+        Jason.encode!(list)
       end
     else
-      Poison.encode!(list)
+      Jason.encode!(list)
     end
   end
 end
@@ -90,18 +80,17 @@ end
 
 defimpl ExAdmin.Render, for: DateTime do
   def to_string(dt) do
-    dt
-    |> Utils.to_datetime()
-    |> :calendar.universal_time_to_local_time()
-    |> Utils.format_datetime()
+    # dt
+    # |> Utils.to_datetime()
+    # |> :calendar.universal_time_to_local_time()
+    # |> Utils.format_datetime()
+    dt |> DateTime.to_string() |> String.replace("Z", "")
   end
 end
 
 defimpl ExAdmin.Render, for: NaiveDateTime do
   def to_string(dt) do
-    dt
-    |> NaiveDateTime.to_erl()
-    |> ExAdmin.Utils.format_datetime()
+    NaiveDateTime.to_string(dt)
   end
 end
 
